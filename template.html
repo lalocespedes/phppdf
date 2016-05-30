@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+
+
+</head>
+<body>
+
+
+<div class="col-header-izquierda">
+    <?php echo invoice_logo(); ?>
+    .
+</div>
+<div class="col-header-centro">
+    <strong><?php echo strtoupper(invoice_from_company_name($invoice)); ?></strong>
+    <div><strong><?php echo invoice_from_name($invoice); ?></strong></div>
+    <div><strong><?php echo invoice_tax_id($invoice); ?></strong></div>
+    <div><small><?php echo invoice_from_address($invoice); ?> <?php echo noExterior($invoice); ?> <?php echo noInterior($invoice); ?> <?php echo invoice_from_address_2($invoice); ?></small></div>
+    <div><small><?php echo invoice_from_city_state_zip($invoice); ?> <?php echo invoice_from_country($invoice); ?></small></div>
+    <?php echo (invoice_from_phone_number($invoice)) ? 'Tel: '.invoice_from_phone_number($invoice) : ''; ?>
+    <?php echo ($invoice->celular) ? 'Celular: '.$invoice->celular : ''; ?>		<div><small><?php echo invoice_regimen_fiscal($invoice); ?></small></div>
+    <div><?php if (curp($invoice)) { echo 'CURP: '.curp($invoice) ; } ?></div>
+    <div><?php if (cedprof($invoice)) { echo 'CEDULA PROFESIONAL: '.cedprof($invoice) ; } ?></div>
+    <div><?php echo CIForestal($invoice); ?></div></small>
+
+</div>
+<div class="col-header-derecha">
+    <b>Documento<b> <font size="16" color="red"> <?php echo invoice_id($invoice); ?> <?php echo serie($invoice); ?></font>
+        <div class="sellos">
+            <div class="div-table-row" style="background: #eee;"><b>FOLIO FISCAL (UUID):<b></div>
+            <div class="div-table-row"><?php echo invoice_UUID($invoice); ?></div>
+            <div class="div-table-row" style="background: #eee;"><b>Número de serie CSD del SAT</b></div>
+            <div class="div-table-row"><?php echo noCertificadoSAT($invoice); ?></div>
+            <div class="div-table-row" style="background: #eee;"><b>Número de serie CSD del emisor</b></div>
+            <div class="div-table-row"><?php echo noCertificado($invoice); ?></div>
+            <div class="div-table-row" style="background: #eee;"><b>Fecha y Hora de Certificación</b></div>
+            <div class="div-table-row"><?php echo fechatimbrado($invoice); ?></div>
+            <div class="div-table-row"></div>
+        </div>
+</div>
+<div><small><strong>Lugar expedicion:<b></strong> <?php echo invoice_from_city_state($invoice); ?> <?php echo invoice_from_country($invoice); ?> |<small><strong>Fecha:</strong></small> <?php echo invoice_date_entered($invoice); ?></div>
+
+
+<div class="table2">
+
+    <div class="col-header2-izquierda">
+        <div><?php echo invoice_to_client_name($invoice); ?> <small><strong><?php echo invoice_client_tax_id($invoice); ?></strong></small></div>
+        <div><?php echo invoice_to_address($invoice); ?> <?php echo noExterior_client($invoice); ?> <?php echo noInterior_client($invoice); ?></div>
+        <div><?php echo invoice_to_address_2($invoice). ' ' . invoice_to_zip($invoice); ?></div>
+        <div><?php echo invoice_to_city($invoice) . ', ' . invoice_to_state($invoice) . ' ' . invoice_to_country($invoice); ?></div>
+    </div>
+
+    <div class="col-header2-centro">
+    </div>
+
+    <div class="col-header2-derecha">
+        <p align="center"><small><b>Tipo comprobante:<b></small> <?php echo strtoupper(tipoDeComprobante($invoice)); ?> | <small><b>Forma de pago:<b></small> <?php echo strtoupper(invoice_formapago($invoice)); ?> | <small><b>Metodo de pago:<b></small> <?php echo strtoupper(invoice_metodopago($invoice)); ?> | <small><b>Num cta:<b></small> <?php echo strtoupper(invoice_NumCtapago($invoice)); ?> | <small><b>Banco:<b></small> <?php echo invoice_banco($invoice); ?> | <small><b>Moneda:<b></small> <?php echo ($invoice->invoice_moneda <> 'MXN') ? invoice_moneda($invoice).' - '.tipocambio($invoice) : invoice_moneda($invoice); ?> | <small><b>Descuento:<b></small> <?php echo invoice_discount($invoice); ?></p>
+    </div>
+
+</div>
+
+<table id="items" autosize:"1">
+<tbody>
+<tr >
+    <th>Cantidad</th>
+    <th>Unidad</th>
+    <th>CPDIGO</th>
+    <th>SDESCRIPTION</th>
+    <th align="center">Valor unitario</th>
+    <th align="center">
+        <?php echo $this->lang->line('cost'); ?>
+    </th>
+</tr>
+<?php foreach ($invoice->invoice_items->items as $item) { ?>
+<tr style="border:1px solid black;">
+    <td align="center" style="border:1px solid black;">
+        1
+    </td>
+    <td style="border:1px solid black;">
+       LITRO
+    </td>
+    <td style="border:1px solid black;">
+        C001
+    </td>
+    <td style="border:1px solid black;">
+        AGUA
+    </td>
+    <td align="right" style="border:1px solid black;">
+       1000
+    </td>
+    <td align="right" style="border:1px solid black;">
+        1000
+    </td>
+</tr>
+<?php } ?>
+<tr>
+    <td colspan="4"  ></td>
+    <td colspan="1" align="right" style="border:1px solid black;"><b>Subtotal</b></td>
+    <td colspan="1" align="right" style="border:1px solid black;">1160.00</td>
+</tr>
+<tr >
+    <td colspan="4"></td>
+    <td colspan="1" align="right" style="border:1px solid black;"><b>IVA</b></td>
+    <td colspan="1" align="right" style="border:1px solid black;">160.00</td>
+</tr>
+<tr>
+    <td colspan="4"  >Importe con letra: un chorro de dinero</td>
+    <td colspan="1" align="right" style="border:1px solid black;"><b>Total</b></td>
+    <td colspan="1" align="right" style="border:1px solid black;">1160.00</td>
+</tr>
+</tbody>
+</table>
+<br>
+NOTAS
+<br>
+QR
+<ul style="font-size:x-small;">
+    <li><b>CADENA ORIGINAL:</b></li>
+    <li>CADENA ORIGIANL</li>
+    <li><b>SELLO DIGITAL DEL CFDI:</b></li>
+    <li>SELLO DIGITAL</li>
+    <li><b>SELLO DIGITAL DEL SAT:</b></li>
+    <li>SELLO CFD</li>
+</ul>
+Efectos fiscales al pago. Este documento es una representacion impresa de un CFDI.
+
+</body>
+</html>
